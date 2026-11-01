@@ -166,13 +166,13 @@ experiment 1 ─── N algorithm_result
 | # | 작업 | 완료 기준 | 예정일 |
 |---|---|---|---|
 | T0 | 환경 확인 + 설계 문서 커밋 | 도구 버전 확인, 이 문서 커밋 | 11/1 |
-| T1 | 백엔드 프로젝트 생성 (Web, JPA, Validation, MySQL Driver) | `./gradlew bootRun` 기동 (DB 연결 제외) | 11/2 |
+| T1 | 백엔드 프로젝트 생성 (Web MVC, Validation) | `./gradlew bootRun` 기동 (DB 연결 제외) | 11/2 |
 | T2 | Bubble Sort + OperationCounter (순수 Java) | 빈 배열/1개/중복/음수/정렬/역순/무작위 결과가 `Arrays.sort`와 같음, `[3,2,1]` 카운트가 손 계산과 같음 | 11/2 |
 | T3 | DataGenerator | 같은 seed면 같은 배열, 패턴별 순서 검증, 범위 준수 | 11/2 |
 | T4 | BenchmarkRunner | 원본 불변 테스트, 중앙값 테스트, 실측으로 크기 제한 확정 | 11/3 |
 | T5 | `POST /api/experiments` (DB 없이) + 검증 + ProblemDetail | 성공 1개, 400 케이스 3개 확인 | 11/3 |
 | T6 | 프론트 생성 + 설정 폼 + 결과 표 | 브라우저에서 실행 → 표 표시 | 11/4 |
-| T7 | MySQL 연결(환경변수) + Entity/Repository + 저장 | INSERT SQL 로그와 테이블 행 확인 | 11/5 |
+| T7 | JPA·MySQL Driver 의존성 추가 + MySQL 연결(환경변수) + Entity/Repository + 저장 | INSERT SQL 로그와 테이블 행 확인 | 11/5 |
 | T8 | 목록/상세 API + 404 | 페이징 동작, 없는 id면 404 | 11/5 |
 | T9 | Insertion, Merge (인터페이스 도입) | T2와 같은 테스트 통과 | 11/6 |
 | T10 | 목록·상세 화면 + 막대 차트 | 목록 → 상세 이동, 차트 표시 | 11/6 |
@@ -202,6 +202,22 @@ experiment 1 ─── N algorithm_result
 | Git | 설치됨 |
 | Docker | 없음 (사용하지 않음) |
 
+JDK 21은 IntelliJ로 받은 Amazon Corretto 21.0.13(`~/.jdks/corretto-21.0.13`)을 쓴다. 터미널마다 기본 `java`가 다르므로(시스템 `JAVA_HOME`은 JDK 17) 빌드는 Gradle Toolchain으로 21을 고정한다.
+
+### 백엔드 생성 결과 (T1)
+
+| 항목 | 값 |
+|---|---|
+| 생성 도구 | start.spring.io (Gradle - Groovy, Java 21, jar) |
+| Spring Boot | 4.1.2 |
+| Gradle Wrapper | 9.8.2 |
+| io.spring.dependency-management | 1.1.7 |
+| 의존성 | `spring-boot-starter-webmvc`, `spring-boot-starter-validation` (Boot 4에서 web 스타터 이름이 `webmvc`로 바뀜) |
+| group / package | `com.algolab` |
+
+JPA와 MySQL Driver는 T1에서 넣지 않았다. JPA가 classpath에 있으면 DB 설정이 없을 때 서버가 뜨지 않는다. 그래서 DB를 실제로 쓰는 T7에서 추가한다.
+
 ## 변경 이력
 
 - 2026-11-01: v1.0 확정
+- 2026-11-01: JPA·MySQL Driver 추가 시점을 T1 → T7로 변경, T1 생성 결과 기록
